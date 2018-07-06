@@ -29,8 +29,8 @@ public class PersistentAuditEvent {
     private String auditEventType;
 
     @ElementCollection
-    @MapKeyColumn(name = "name")
-    @Column(name = "value")
+    @MapKeyColumn(name = "event_name", columnDefinition="VARCHAR(64)")
+    @Column(name = "event_value", columnDefinition="VARCHAR(64)")
     @CollectionTable(name = "t_persistent_audit_evt_data", joinColumns=@JoinColumn(name="event_id"))
     private Map<String, String> data = new HashMap<String, String>();
 

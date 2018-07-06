@@ -7,7 +7,7 @@ services:
         #     - ~/volumes/jhipster/erp/mysql/:/var/lib/mysql/
         environment:
             - MYSQL_USER=root
-            - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+            - MYSQL_PASSWORD=v01XzjomRc2V
             - MYSQL_DATABASE=erp
         ports:
             - 3306:3306

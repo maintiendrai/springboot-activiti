@@ -1,117 +1,63 @@
-package com.wyy.domain.erm;
+package com.wyy.repository.erm;
 
-import com.wyy.domain.BaseEntity;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
+import com.wyy.domain.erm.Organization;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 
-import javax.persistence.*;
+import java.util.List;
 
 /**
- * Created by Administrator on 2016/12/7.
+ * Created by Administrator on 2016/12/8.
  */
-@Entity
-@Table(name = "t_erm_organization")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-public class Organization extends BaseEntity {
+public interface OrganizationRepository extends JpaRepository<Organization, Long> {
+
+    List<Organization> findAllByParentId(Long id);
+
+    @Modifying
+    @Query("update Organization a set a.isParent =true  where a.id = ?1")
+    void update(Long id);
+
+    @Modifying
+    @Query("update Organization a set a.name = ?1  where a.id = ?2")
+    void updateOrgz(String name,Long id);
 
 
-    /*编码*/
-    @Column(name = "code")
-    private String code;
-    /*名称*/
-    @Column(name = "name")
-    private String name;
+    @Modifying
+    @Query("update Organization a set a.isParent=0 where id =?1 and (SELECT count(*) FROM Organization a where parentId=?1)=0")
+    int updateIsParentId(Long pid);
 
-    /*图标*/
-    @Column(name = "cls")
-    private String cls;
+//    @Query(value = "WITH w1( id, parent_id, t_name) AS " +
+//        "(       SELECT " +
+//        "            orz.id, " +
+//        "            orz.parent_id, " +
+//        "            orz.t_name " +
+//        "        FROM " +
+//        "            t_erm_organization  orz " +
+//        "        WHERE " +
+//        "            id = ?1" +
+//        "    UNION ALL " +
+//        "        SELECT " +
+//        "            orz.id,  " +
+//        "            orz.parent_id,  " +
+//        "            orz.t_name " +
+//        "        FROM " +
+//        "            t_erm_organization  orz  JOIN w1 ON orz.parent_id= w1.id " +
+//        ")  " +
+//        "SELECT id FROM w1",nativeQuery=true)
+//    Long[] findIdByParentId(Long id);
 
-    /*全称*/
-    @Column(name = "fullName")
-    private String fullName;
-
-
-    /*机构类型*/
-    @Column(name = "orgzType")
-    private Integer orgzType;   // 1:公司 2:部门
-
-    /*是否为父节点*/
-    @Column(name = "isParent")
-    private boolean isParent;
-
-
-    /*组织机构路径*/
-    @Column(name = "orgzUrl")
-    private String orgzUrl;
-    public Organization() {
-        // do nothing
-    }
-
-    public Integer getOrgzType() {
-        return orgzType;
-    }
-
-    public void setOrgzType(Integer orgzType) {
-        this.orgzType = orgzType;
-    }
-
-    public String getOrgzUrl() {
-        return orgzUrl;
-    }
-
-    public void setOrgzUrl(String orgzUrl) {
-        this.orgzUrl = orgzUrl;
-    }
-
-    /*上级id*/
-    @Column(name="parent_id")
-    private Long parentId;
-
-    public Long getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(Long parentId) {
-        this.parentId = parentId;
-    }
-
-    public boolean getIsParent() {
-        return isParent;
-    }
-
-    public void setIsParent(boolean isParent) {
-        this.isParent = isParent;
-    }
-
-    public String getCls() {
-        return cls;
-    }
-
-    public void setCls(String cls) {
-        this.cls = cls;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
+    @Query(value = "SELECT " +
+        "            orz.id" +
+        "        FROM " +
+        "            t_erm_organization  orz " +
+        "        WHERE " +
+        "            id = ?1" +
+        "    UNION ALL " +
+        "        SELECT " +
+        "            orz.id " +
+        "        FROM " +
+        "            t_erm_organization  orz  JOIN t_erm_organization w1 ON orz.parent_id= w1.id " +
+        "",nativeQuery=true)
+    Long[] findIdByParentId(Long id);
 }

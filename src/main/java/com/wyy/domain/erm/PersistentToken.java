@@ -22,9 +22,10 @@ public class PersistentToken implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private static final int MAX_USER_AGENT_LEN = 255;
+    private static final int MAX_USER_AGENT_LEN = 20;//255
 
     @Id
+    @Column(columnDefinition="VARCHAR(64)")
     private String series;
 
     @JsonIgnore

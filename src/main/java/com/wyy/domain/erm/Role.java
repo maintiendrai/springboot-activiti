@@ -18,10 +18,10 @@ import java.util.Set;
 public class Role extends BaseEntity {
 
     /*角色名称*/
-    @Column(name = "name")
+    @Column(name = "t_name")
     private String name;
     /*描述*/
-    @Column(name = "describe")
+    @Column(name = "t_description")
     private String describe;
 
 

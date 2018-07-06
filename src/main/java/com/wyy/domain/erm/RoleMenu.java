@@ -34,7 +34,7 @@ public class RoleMenu  extends BaseEntity {
 
 
     /*菜单对应动作权限*/
-    @OneToMany(mappedBy = "roleMenu",cascade= CascadeType.ALL,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "roleMenu", cascade= CascadeType.ALL,fetch = FetchType.EAGER)
     private Set<RoleMenuAction> actions= new HashSet<RoleMenuAction>();
 
 

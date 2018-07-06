@@ -299,6 +299,8 @@ public class ActivitiResource {
     public ResponseEntity<Object> startProcess(String key) throws URISyntaxException {
         String userId=userService.getUserWithAuthorities().getId().toString();
         identityService.setAuthenticatedUserId(userId);
+
+        System.out.println("lilkr debug.................." + userId);
         Map pmap=new HashMap<>();
         pmap.put("startUser",userId);
         ProcessInstance processInstance= runtimeService.startProcessInstanceByKey(key,pmap);
